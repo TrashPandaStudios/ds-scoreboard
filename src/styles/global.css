@@ -1,0 +1,62 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Base colors */
+  --bg-dark: #0a0a0f;
+  --bg-card: #12121a;
+  --bg-hover: #1a1a25;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0b0;
+  --accent-cyan: #00f0ff;
+  --accent-magenta: #ff00aa;
+  --accent-gold: #ffd700;
+  --danger: #ff3344;
+  --success: #00ff88;
+  
+  /* Team default colors */
+  --team-home: #ff4444;
+  --team-away: #4488ff;
+  
+  /* Shadows and effects */
+  --glow-cyan: 0 0 20px rgba(0, 240, 255, 0.5);
+  --glow-magenta: 0 0 20px rgba(255, 0, 170, 0.5);
+  
+  /* Typography */
+  --font-display: 'Orbitron', sans-serif;
+  --font-body: 'Rajdhani', sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+input {
+  font-family: var(--font-body);
+  outline: none;
+  border: none;
+}
+

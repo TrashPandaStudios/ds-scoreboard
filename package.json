@@ -1,0 +1,55 @@
+{
+  "name": "drone-soccer-scoreboard",
+  "version": "1.0.0",
+  "description": "Official Drone Soccer Scoreboard following FAI rules - featuring dual-window display for multi-monitor setups",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "electron": "electron .",
+    "electron:dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "package": "npm run build && electron-builder"
+  },
+  "keywords": [
+    "drone-soccer",
+    "scoreboard",
+    "fai",
+    "electron",
+    "esports"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "concurrently": "^8.2.2",
+    "electron": "^39.2.7",
+    "electron-builder": "^24.9.1",
+    "vite": "^7.3.0",
+    "wait-on": "^7.2.0"
+  },
+  "build": {
+    "appId": "com.dronesoccer.scoreboard",
+    "productName": "Drone Soccer Scoreboard",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "win": {
+      "target": "portable"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}
