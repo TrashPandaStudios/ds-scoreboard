@@ -2,7 +2,7 @@ class GameState {
   constructor(callbacks = {}) {
     this.callbacks = callbacks;
     this.timerInterval = null;
-    
+
     this.state = {
       teams: {
         home: { name: 'Team 1', color: '#FF4444', score: 0, penalties: 0, setsWon: 0 },
@@ -91,19 +91,19 @@ class GameState {
       this.startWaitingTimer();
       return;
     }
-    
+
     if (this.state.timer.remainingSeconds > 0 && !this.state.timer.isRunning) {
       this.state.timer.isRunning = true;
       this.state.match.isEnded = false;
-      
+
       this.timerInterval = setInterval(() => {
         if (this.state.timer.remainingSeconds > 0) {
           this.state.timer.remainingSeconds -= 1;
-          
+
           if (this.callbacks.onStateChange) {
             this.callbacks.onStateChange();
           }
-          
+
           // Timer reached zero
           if (this.state.timer.remainingSeconds === 0) {
             this.endSet();
@@ -116,15 +116,15 @@ class GameState {
   startWaitingTimer() {
     if (this.state.sets.waitingRemainingSeconds > 0 && !this.state.timer.isRunning) {
       this.state.timer.isRunning = true;
-      
+
       this.timerInterval = setInterval(() => {
         if (this.state.sets.waitingRemainingSeconds > 0) {
           this.state.sets.waitingRemainingSeconds -= 1;
-          
+
           if (this.callbacks.onStateChange) {
             this.callbacks.onStateChange();
           }
-          
+
           // Waiting period ended
           if (this.state.sets.waitingRemainingSeconds === 0) {
             this.endWaitingPeriod();
@@ -166,20 +166,20 @@ class GameState {
 
   endSet() {
     this.pauseTimer();
-    
+
     const homePenalties = this.state.teams.home.penalties;
     const awayPenalties = this.state.teams.away.penalties;
-    
+
     // Check if penalty phase is needed
     if (homePenalties > 0 || awayPenalties > 0) {
       const penaltyDiff = Math.abs(homePenalties - awayPenalties);
-      
+
       if (penaltyDiff > 0) {
         // Enter penalty phase
         const striker = homePenalties < awayPenalties ? 'home' : 'away';
         const defender = homePenalties < awayPenalties ? 'away' : 'home';
         const penaltyTime = penaltyDiff * 10; // 10 seconds per penalty difference
-        
+
         this.state.penaltyPhase = {
           isActive: true,
           striker: striker,
@@ -188,32 +188,37 @@ class GameState {
           remainingSeconds: penaltyTime,
           penaltyDifference: penaltyDiff
         };
-        
+
         this.state.match.isEnded = false; // Not ended yet, penalty phase first
-        
+
         if (this.callbacks.onStateChange) {
           this.callbacks.onStateChange();
         }
         return; // Don't finalize set yet
       }
     }
-    
+
     // No penalty phase needed or penalties are equal - finalize set
     this.finalizeSet();
   }
 
   startPenaltyPhase() {
-    if (this.state.penaltyPhase.isActive && this.state.penaltyPhase.remainingSeconds > 0) {
+    if (this.state.penaltyPhase.isActive && this.state.penaltyPhase.remainingSeconds > 0 && !this.state.timer.isRunning) {
       this.state.timer.isRunning = true;
-      
+
+      // Clear any existing interval just in case
+      if (this.timerInterval) {
+        clearInterval(this.timerInterval);
+      }
+
       this.timerInterval = setInterval(() => {
         if (this.state.penaltyPhase.remainingSeconds > 0) {
           this.state.penaltyPhase.remainingSeconds -= 1;
-          
+
           if (this.callbacks.onStateChange) {
             this.callbacks.onStateChange();
           }
-          
+
           if (this.state.penaltyPhase.remainingSeconds === 0) {
             this.endPenaltyPhase();
           }
@@ -226,7 +231,7 @@ class GameState {
     this.pauseTimer();
     this.state.penaltyPhase.isActive = false;
     this.finalizeSet();
-    
+
     if (this.callbacks.onTimerEnd) {
       this.callbacks.onTimerEnd();
     }
@@ -242,7 +247,7 @@ class GameState {
   finalizeSet() {
     this.state.match.isEnded = true;
     this.state.penaltyPhase.isActive = false;
-    
+
     // Determine set winner based on score
     let winner = 'tie';
     if (this.state.teams.home.score > this.state.teams.away.score) {
@@ -252,7 +257,7 @@ class GameState {
       this.state.teams.away.setsWon += 1;
       winner = 'away';
     }
-    
+
     // Record set history
     this.state.sets.history.push({
       setNumber: this.state.sets.current,
@@ -260,15 +265,15 @@ class GameState {
       awayScore: this.state.teams.away.score,
       winner: winner
     });
-    
+
     // Check if match is complete
     const setsToWin = Math.ceil(this.state.sets.total / 2);
-    if (this.state.teams.home.setsWon >= setsToWin || 
-        this.state.teams.away.setsWon >= setsToWin ||
-        this.state.sets.current >= this.state.sets.total) {
+    if (this.state.teams.home.setsWon >= setsToWin ||
+      this.state.teams.away.setsWon >= setsToWin ||
+      this.state.sets.current >= this.state.sets.total) {
       this.state.match.isMatchComplete = true;
     }
-    
+
     if (this.callbacks.onTimerEnd) {
       this.callbacks.onTimerEnd();
     }
@@ -278,21 +283,21 @@ class GameState {
     if (setIndex >= 0 && setIndex < this.state.sets.history.length) {
       const oldSet = this.state.sets.history[setIndex];
       const oldWinner = oldSet.winner;
-      
+
       // Remove old winner's set win
       if (oldWinner === 'home') {
         this.state.teams.home.setsWon = Math.max(0, this.state.teams.home.setsWon - 1);
       } else if (oldWinner === 'away') {
         this.state.teams.away.setsWon = Math.max(0, this.state.teams.away.setsWon - 1);
       }
-      
+
       // Add new winner's set win
       if (winner === 'home') {
         this.state.teams.home.setsWon += 1;
       } else if (winner === 'away') {
         this.state.teams.away.setsWon += 1;
       }
-      
+
       // Update history
       this.state.sets.history[setIndex] = {
         setNumber: oldSet.setNumber,
@@ -300,11 +305,11 @@ class GameState {
         awayScore: awayScore,
         winner: winner
       };
-      
+
       // Recalculate match complete status
       const setsToWin = Math.ceil(this.state.sets.total / 2);
-      this.state.match.isMatchComplete = 
-        this.state.teams.home.setsWon >= setsToWin || 
+      this.state.match.isMatchComplete =
+        this.state.teams.home.setsWon >= setsToWin ||
         this.state.teams.away.setsWon >= setsToWin ||
         this.state.sets.history.length >= this.state.sets.total;
     }
@@ -322,7 +327,7 @@ class GameState {
   endWaitingPeriod() {
     this.pauseTimer();
     this.state.sets.isWaitingPeriod = false;
-    
+
     if (this.callbacks.onTimerEnd) {
       this.callbacks.onTimerEnd();
     }
@@ -332,13 +337,13 @@ class GameState {
     this.pauseTimer();
     this.state.sets.isWaitingPeriod = false;
     this.state.sets.current += 1;
-    
+
     // Reset scores for new set
     this.state.teams.home.score = 0;
     this.state.teams.away.score = 0;
     this.state.teams.home.penalties = 0;
     this.state.teams.away.penalties = 0;
-    
+
     // Reset timer
     this.state.timer.remainingSeconds = this.state.timer.totalSeconds;
     this.state.match.isEnded = false;
@@ -347,7 +352,7 @@ class GameState {
   endMatch() {
     this.pauseTimer();
     this.state.match.isEnded = true;
-    
+
     if (this.callbacks.onTimerEnd) {
       this.callbacks.onTimerEnd();
     }
@@ -401,12 +406,12 @@ class GameState {
   // Full reset
   resetMatch() {
     this.pauseTimer();
-    
+
     const homeTeam = this.state.teams.home;
     const awayTeam = this.state.teams.away;
     const totalSets = this.state.sets.total;
     const waitingTime = this.state.sets.waitingTotalSeconds;
-    
+
     this.state = {
       teams: {
         home: { name: homeTeam.name, color: homeTeam.color, score: 0, penalties: 0, setsWon: 0 },

@@ -23,7 +23,7 @@ function Scoreboard() {
         <div className="bg-glow bg-glow-left"></div>
         <div className="bg-glow bg-glow-right"></div>
       </div>
-      
+
       <header className="scoreboard-header">
         {gameState.sponsors && gameState.sponsors.length > 0 ? (
           <SponsorDisplay sponsors={gameState.sponsors} label={gameState.sponsorLabel} />
@@ -48,47 +48,25 @@ function Scoreboard() {
       </header>
 
       <main className="scoreboard-main">
-        <TeamScore 
-          team={gameState.teams.home} 
+        <TeamScore
+          team={gameState.teams.home}
           side="home"
+          penaltyRole={gameState.penaltyPhase?.isActive ? (gameState.penaltyPhase.striker === 'home' ? 'STRIKER' : 'DEFENDER') : null}
         />
-        
+
         <div className="center-display">
           <div className="set-indicator-center">
             <span className="set-text">SET</span>
             <span className="set-number">{gameState.sets?.current || 1}</span>
             <span className="set-of-total">/ {gameState.sets?.total || 3}</span>
           </div>
-          
+
           {gameState.penaltyPhase?.isActive ? (
             <>
               <div className="penalty-phase-display">
                 <div className="penalty-phase-header">PENALTY PHASE</div>
-                <div className="penalty-phase-info">
-                  <div 
-                    className="penalty-role striker"
-                    style={{ 
-                      color: gameState.teams[gameState.penaltyPhase.striker]?.color,
-                      borderColor: gameState.teams[gameState.penaltyPhase.striker]?.color
-                    }}
-                  >
-                    <span className="role-label">STRIKER</span>
-                    <span className="role-team">{gameState.teams[gameState.penaltyPhase.striker]?.name}</span>
-                  </div>
-                  <div className="penalty-vs">VS</div>
-                  <div 
-                    className="penalty-role defender"
-                    style={{ 
-                      color: gameState.teams[gameState.penaltyPhase.defender]?.color,
-                      borderColor: gameState.teams[gameState.penaltyPhase.defender]?.color
-                    }}
-                  >
-                    <span className="role-label">DEFENDER</span>
-                    <span className="role-team">{gameState.teams[gameState.penaltyPhase.defender]?.name}</span>
-                  </div>
-                </div>
               </div>
-              <Timer 
+              <Timer
                 time={formatTime(gameState.penaltyPhase.remainingSeconds)}
                 isRunning={gameState.timer.isRunning}
                 isEnded={false}
@@ -101,9 +79,9 @@ function Scoreboard() {
               {gameState.teams.home.score > gameState.teams.away.score ? (
                 <>
                   <div className="winner-label">SET {gameState.sets?.current || 1} WINNER</div>
-                  <div 
+                  <div
                     className="winner-team"
-                    style={{ 
+                    style={{
                       color: gameState.teams.home.color,
                       textShadow: `0 0 30px ${gameState.teams.home.color}`
                     }}
@@ -114,9 +92,9 @@ function Scoreboard() {
               ) : gameState.teams.away.score > gameState.teams.home.score ? (
                 <>
                   <div className="winner-label">SET {gameState.sets?.current || 1} WINNER</div>
-                  <div 
+                  <div
                     className="winner-team"
-                    style={{ 
+                    style={{
                       color: gameState.teams.away.color,
                       textShadow: `0 0 30px ${gameState.teams.away.color}`
                     }}
@@ -132,7 +110,7 @@ function Scoreboard() {
               )}
             </div>
           ) : gameState.sets?.isWaitingPeriod ? (
-            <Timer 
+            <Timer
               time={formatTime(gameState.sets.waitingRemainingSeconds)}
               isRunning={gameState.timer.isRunning}
               isEnded={false}
@@ -140,14 +118,14 @@ function Scoreboard() {
               label="BREAK"
             />
           ) : (
-            <Timer 
+            <Timer
               time={formatTime(gameState.timer.remainingSeconds)}
               isRunning={gameState.timer.isRunning}
               isEnded={gameState.match.isEnded}
               remainingSeconds={gameState.timer.remainingSeconds}
             />
           )}
-          
+
           <div className="sets-score">
             <span className="sets-home" style={{ color: gameState.teams.home.color }}>
               {gameState.teams.home.setsWon || 0}
@@ -158,10 +136,11 @@ function Scoreboard() {
             </span>
           </div>
         </div>
-        
-        <TeamScore 
-          team={gameState.teams.away} 
+
+        <TeamScore
+          team={gameState.teams.away}
           side="away"
+          penaltyRole={gameState.penaltyPhase?.isActive ? (gameState.penaltyPhase.striker === 'away' ? 'STRIKER' : 'DEFENDER') : null}
         />
       </main>
 
@@ -171,13 +150,13 @@ function Scoreboard() {
       </div>
 
       <footer className="scoreboard-footer">
-        <PenaltyDisplay 
+        <PenaltyDisplay
           homePenalties={gameState.teams.home.penalties}
           awayPenalties={gameState.teams.away.penalties}
           homeColor={gameState.teams.home.color}
           awayColor={gameState.teams.away.color}
         />
-        
+
         {gameState.sets?.history?.length > 0 && (
           <div className="set-history">
             <div className="set-history-label">Previous Sets</div>
@@ -185,14 +164,14 @@ function Scoreboard() {
               {gameState.sets.history.map((set, index) => (
                 <div key={index} className="set-history-item">
                   <span className="set-history-number">Set {set.setNumber}</span>
-                  <span 
+                  <span
                     className={`set-history-score ${set.winner === 'home' ? 'winner' : ''}`}
                     style={{ color: set.winner === 'home' ? gameState.teams.home.color : undefined }}
                   >
                     {set.homeScore}
                   </span>
                   <span className="set-history-dash">-</span>
-                  <span 
+                  <span
                     className={`set-history-score ${set.winner === 'away' ? 'winner' : ''}`}
                     style={{ color: set.winner === 'away' ? gameState.teams.away.color : undefined }}
                   >

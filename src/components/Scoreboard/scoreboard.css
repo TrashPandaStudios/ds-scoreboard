@@ -19,7 +19,7 @@
 .bg-grid {
   position: absolute;
   inset: 0;
-  background-image: 
+  background-image:
     linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
   background-size: 50px 50px;
@@ -27,8 +27,13 @@
 }
 
 @keyframes grid-move {
-  0% { background-position: 0 0; }
-  100% { background-position: 50px 50px; }
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 50px 50px;
+  }
 }
 
 .bg-glow {
@@ -60,7 +65,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, transparent 100%);
 }
 
 .title {
@@ -111,8 +116,17 @@
 }
 
 @keyframes pulse-dot {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.3); opacity: 0.7; }
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.3);
+    opacity: 0.7;
+  }
 }
 
 .status-paused {
@@ -136,13 +150,27 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
 }
 
 @keyframes ended-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
 }
 
 /* Main scoreboard area */
@@ -225,7 +253,7 @@
 
 .score-value {
   font-family: var(--font-display);
-  font-size: clamp(8rem, 18vw, 14rem);
+  font-size: clamp(10rem, 25vw, 22rem);
   font-weight: 900;
   line-height: 0.9;
   color: var(--text-primary);
@@ -254,22 +282,29 @@
 
 .timer.running {
   border-color: var(--accent-cyan);
-  box-shadow: 
+  box-shadow:
     var(--glow-cyan),
     inset 0 0 30px rgba(0, 240, 255, 0.1);
 }
 
 .timer.ended {
   border-color: var(--danger);
-  box-shadow: 
+  box-shadow:
     0 0 40px rgba(255, 51, 68, 0.6),
     inset 0 0 30px rgba(255, 51, 68, 0.1);
   animation: timer-ended 0.5s ease-in-out infinite;
 }
 
 @keyframes timer-ended {
-  0%, 100% { border-color: var(--danger); }
-  50% { border-color: rgba(255, 51, 68, 0.3); }
+
+  0%,
+  100% {
+    border-color: var(--danger);
+  }
+
+  50% {
+    border-color: rgba(255, 51, 68, 0.3);
+  }
 }
 
 .timer-label {
@@ -283,7 +318,7 @@
 
 .timer-value {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 8vw, 5.5rem);
+  font-size: clamp(4rem, 12vw, 9rem);
   font-weight: 900;
   letter-spacing: 0.15em;
 }
@@ -294,18 +329,21 @@
 
 .timer.warning {
   border-color: var(--danger);
-  box-shadow: 
+  box-shadow:
     0 0 40px rgba(255, 51, 68, 0.6),
     inset 0 0 30px rgba(255, 51, 68, 0.1);
   animation: timer-warning 0.5s ease-in-out infinite;
 }
 
 @keyframes timer-warning {
-  0%, 100% { 
+
+  0%,
+  100% {
     border-color: var(--danger);
     box-shadow: 0 0 40px rgba(255, 51, 68, 0.6), inset 0 0 30px rgba(255, 51, 68, 0.1);
   }
-  50% { 
+
+  50% {
     border-color: rgba(255, 51, 68, 0.4);
     box-shadow: 0 0 20px rgba(255, 51, 68, 0.3), inset 0 0 15px rgba(255, 51, 68, 0.05);
   }
@@ -322,8 +360,15 @@
 }
 
 @keyframes flash {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
 }
 
 .timer-pulse {
@@ -345,6 +390,7 @@
     transform: scale(1);
     opacity: 0.6;
   }
+
   100% {
     transform: scale(1.15);
     opacity: 0;
@@ -356,6 +402,7 @@
     transform: scale(1);
     opacity: 0.8;
   }
+
   100% {
     transform: scale(1.2);
     opacity: 0;
@@ -452,63 +499,67 @@
 
 .penalty-phase-header {
   font-family: var(--font-display);
-  font-size: 1rem;
+  font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: 700;
   letter-spacing: 0.3em;
   color: var(--accent-gold);
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
   text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
   animation: pulse 0.8s ease-in-out infinite;
 }
 
-.penalty-phase-info {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.penalty-role {
-  padding: 0.5rem 1rem;
-  background: rgba(0, 0, 0, 0.4);
-  border: 2px solid;
-  border-radius: 8px;
-  text-align: center;
-  min-width: 120px;
-}
-
-.penalty-role.striker {
-  box-shadow: 0 0 15px currentColor;
-}
-
-.penalty-role.defender {
-  opacity: 0.8;
-}
-
-.role-label {
-  display: block;
+/* Penalty Badges in TeamScore */
+.penalty-badge {
   font-family: var(--font-display);
-  font-size: 0.65rem;
-  font-weight: 600;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 800;
   letter-spacing: 0.2em;
-  opacity: 0.8;
-  margin-bottom: 0.25rem;
-}
-
-.role-team {
-  display: block;
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
   text-transform: uppercase;
+  display: inline-block;
+  backdrop-filter: blur(10px);
+  border: 2px solid;
+  animation: badge-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.penalty-vs {
-  font-family: var(--font-display);
-  font-size: 0.8rem;
-  font-weight: 600;
+.penalty-badge.striker {
+  color: var(--accent-gold);
+  border-color: var(--accent-gold);
+  background: rgba(255, 215, 0, 0.15);
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+  animation: striker-pulse 1.5s ease-in-out infinite;
+}
+
+.penalty-badge.defender {
   color: var(--text-secondary);
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+@keyframes badge-pop {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes striker-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 50px rgba(255, 215, 0, 0.6);
+  }
 }
 
 /* Set Winner Display */
@@ -526,6 +577,7 @@
     transform: scale(0.8);
     opacity: 0;
   }
+
   100% {
     transform: scale(1);
     opacity: 1;
@@ -556,9 +608,12 @@
 }
 
 @keyframes winner-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.7;
   }
@@ -717,7 +772,7 @@
   position: relative;
   z-index: 1;
   padding: 1.5rem 3rem;
-  background: linear-gradient(0deg, rgba(0,0,0,0.5) 0%, transparent 100%);
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, transparent 100%);
 }
 
 .penalty-display {
@@ -752,7 +807,7 @@
 .penalty-divider {
   width: 2px;
   height: 50px;
-  background: linear-gradient(180deg, transparent, rgba(255,255,255,0.2), transparent);
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.2), transparent);
 }
 
 /* Set History Display */
@@ -835,7 +890,7 @@
     gap: 2rem;
     padding: 1.5rem 2rem;
   }
-  
+
   .center-display {
     min-width: 220px;
   }
@@ -845,11 +900,11 @@
   .score-value {
     font-size: 8rem;
   }
-  
+
   .timer-value {
     font-size: 3.5rem;
   }
-  
+
   .team-name {
     font-size: 1.5rem;
   }

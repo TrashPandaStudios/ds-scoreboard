@@ -57,7 +57,7 @@ function RefPanel() {
       <header className="ref-header">
         <h1 className="ref-title">Referee Control Panel</h1>
         <div className="header-actions">
-          <button 
+          <button
             className={`sound-toggle ${gameState.settings.soundEnabled ? 'active' : ''}`}
             onClick={() => sendCommand('toggle-sound')}
             title={gameState.settings.soundEnabled ? 'Sound On' : 'Sound Off'}
@@ -73,7 +73,7 @@ function RefPanel() {
       <main className="ref-main">
         <section className="control-section sets-section">
           <h2 className="section-title">Sets & Rounds</h2>
-          <SetControls 
+          <SetControls
             sets={{
               ...gameState.sets,
               homeWon: gameState.teams.home.setsWon,
@@ -85,8 +85,9 @@ function RefPanel() {
             homeTeam={gameState.teams.home}
             awayTeam={gameState.teams.away}
             sendCommand={sendCommand}
+            isRunning={gameState.timer.isRunning}
           />
-          
+
           {gameState.sets?.history?.length > 0 && (
             <div className="set-history-section">
               <h3 className="subsection-title">Edit Previous Sets</h3>
@@ -104,7 +105,7 @@ function RefPanel() {
           <h2 className="section-title">
             {gameState.sets?.isWaitingPeriod ? 'Break Timer' : 'Match Timer'}
           </h2>
-          <TimerControls 
+          <TimerControls
             timer={gameState.timer}
             sets={gameState.sets}
             isEnded={gameState.match.isEnded}
@@ -117,18 +118,18 @@ function RefPanel() {
             <h2 className="section-title" style={{ color: gameState.teams.home.color }}>
               {gameState.teams.home.name}
             </h2>
-            <TeamSettings 
+            <TeamSettings
               team={gameState.teams.home}
               teamKey="home"
               sendCommand={sendCommand}
             />
-            <ScoreControls 
+            <ScoreControls
               score={gameState.teams.home.score}
               teamKey="home"
               color={gameState.teams.home.color}
               sendCommand={sendCommand}
             />
-            <PenaltyControls 
+            <PenaltyControls
               penalties={gameState.teams.home.penalties}
               teamKey="home"
               sendCommand={sendCommand}
@@ -139,18 +140,18 @@ function RefPanel() {
             <h2 className="section-title" style={{ color: gameState.teams.away.color }}>
               {gameState.teams.away.name}
             </h2>
-            <TeamSettings 
+            <TeamSettings
               team={gameState.teams.away}
               teamKey="away"
               sendCommand={sendCommand}
             />
-            <ScoreControls 
+            <ScoreControls
               score={gameState.teams.away.score}
               teamKey="away"
               color={gameState.teams.away.color}
               sendCommand={sendCommand}
             />
-            <PenaltyControls 
+            <PenaltyControls
               penalties={gameState.teams.away.penalties}
               teamKey="away"
               sendCommand={sendCommand}
@@ -160,7 +161,7 @@ function RefPanel() {
 
         <section className="control-section sponsor-section">
           <h2 className="section-title">Sponsors</h2>
-          <SponsorControls 
+          <SponsorControls
             sponsors={gameState.sponsors}
             sponsorLabel={gameState.sponsorLabel}
             sendCommand={sendCommand}

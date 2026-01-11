@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function SetControls({ sets, penaltyPhase, matchIsEnded, isMatchComplete, homeTeam, awayTeam, sendCommand }) {
+function SetControls({ sets, penaltyPhase, matchIsEnded, isMatchComplete, homeTeam, awayTeam, sendCommand, isRunning }) {
   const [waitingMinutes, setWaitingMinutes] = useState(5);
 
   const formatTime = (seconds) => {
@@ -25,7 +25,7 @@ function SetControls({ sets, penaltyPhase, matchIsEnded, isMatchComplete, homeTe
           <span className="set-current-large">Set {sets.current}</span>
           <span className="set-of">of</span>
           <div className="set-total-control">
-            <button 
+            <button
               className="set-adjust-btn"
               onClick={() => sendCommand('set-total-sets', { total: Math.max(1, sets.total - 1) })}
               disabled={sets.total <= 1}
@@ -33,7 +33,7 @@ function SetControls({ sets, penaltyPhase, matchIsEnded, isMatchComplete, homeTe
               −
             </button>
             <span className="set-total-value">{sets.total}</span>
-            <button 
+            <button
               className="set-adjust-btn"
               onClick={() => sendCommand('set-total-sets', { total: Math.min(9, sets.total + 1) })}
               disabled={sets.total >= 9}
@@ -42,7 +42,7 @@ function SetControls({ sets, penaltyPhase, matchIsEnded, isMatchComplete, homeTe
             </button>
           </div>
         </div>
-        
+
         <div className="sets-won">
           <span className="sets-won-label">Sets Won:</span>
           <span className="sets-won-score">
@@ -79,19 +79,29 @@ function SetControls({ sets, penaltyPhase, matchIsEnded, isMatchComplete, homeTe
             </div>
           </div>
           <div className="penalty-actions">
-            <button 
-              className="set-btn start-penalty"
-              onClick={() => sendCommand('start-penalty-phase')}
-            >
-              ▶ Start Penalty
-            </button>
-            <button 
+            {!isRunning ? (
+              <button
+                className="set-btn start-penalty"
+                onClick={() => sendCommand('start-penalty-phase')}
+              >
+                ▶ Start Penalty
+              </button>
+            ) : (
+              <button
+                className="set-btn pause-penalty"
+                onClick={() => sendCommand('pause-timer')}
+                style={{ backgroundColor: '#ffcc00', color: '#000' }}
+              >
+                ⏸ Pause
+              </button>
+            )}
+            <button
               className="set-btn end-penalty"
               onClick={() => sendCommand('end-penalty-phase')}
             >
               End Penalty
             </button>
-            <button 
+            <button
               className="set-btn skip-penalty"
               onClick={() => sendCommand('skip-penalty-phase')}
             >
@@ -110,32 +120,32 @@ function SetControls({ sets, penaltyPhase, matchIsEnded, isMatchComplete, homeTe
 
       <div className="set-actions">
         {!sets.isWaitingPeriod && !matchIsEnded && !isPenaltyPhaseActive && (
-          <button 
+          <button
             className="set-btn end-set"
             onClick={() => sendCommand('end-set')}
           >
             End Set
           </button>
         )}
-        
+
         {canStartWaiting && (
-          <button 
+          <button
             className="set-btn start-waiting"
             onClick={() => sendCommand('start-waiting-period')}
           >
             Start Break ({formatTime(sets.waitingTotalSeconds)})
           </button>
         )}
-        
+
         {canStartNextSet && (
-          <button 
+          <button
             className="set-btn start-next"
             onClick={() => sendCommand('start-next-set')}
           >
             Start Set {sets.current + 1}
           </button>
         )}
-        
+
         {isMatchComplete && !isPenaltyPhaseActive && (
           <div className="match-complete-msg">
             Match Complete!
@@ -146,7 +156,7 @@ function SetControls({ sets, penaltyPhase, matchIsEnded, isMatchComplete, homeTe
       <div className="waiting-config">
         <span className="config-label">Break Duration:</span>
         <div className="waiting-input-group">
-          <input 
+          <input
             type="number"
             min="1"
             max="30"
