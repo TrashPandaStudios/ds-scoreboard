@@ -145,8 +145,8 @@ function Scoreboard() {
       </main>
 
       <div className="branding">
-        <img src={logoSrc} alt="Trash Panda Studios LLC" className="branding-logo" />
-        <span className="branding-name">Trash Panda Studios LLC</span>
+        <img src={logoSrc} alt="Trash Panda Studios" className="branding-logo" />
+        <span className="branding-name">Trash Panda Studios</span>
       </div>
 
       <footer className="scoreboard-footer">
