@@ -7,12 +7,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
   sendCommand: (command, payload) => {
     ipcRenderer.send('command', { command, payload });
   },
-  
+
   // Request current state
   requestState: () => {
     ipcRenderer.send('request-state');
   },
-  
+
   // Listen for state updates
   onStateUpdate: (callback) => {
     const handler = (event, state) => callback(state);
@@ -21,7 +21,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
       ipcRenderer.removeListener('state-update', handler);
     };
   },
-  
+
   // Listen for sound triggers
   onPlaySound: (callback) => {
     const handler = (event, soundName) => callback(soundName);
@@ -30,10 +30,15 @@ contextBridge.exposeInMainWorld('electronAPI', {
       ipcRenderer.removeListener('play-sound', handler);
     };
   },
-  
+
   // Select logo file
   selectLogoFile: () => {
     return ipcRenderer.invoke('select-logo-file');
+  },
+
+  // Select folder
+  selectFolder: () => {
+    return ipcRenderer.invoke('select-folder');
   }
 });
 

@@ -167,6 +167,27 @@ function RefPanel() {
             sendCommand={sendCommand}
           />
         </section>
+
+        <section className="control-section settings-section">
+          <h2 className="section-title">Global Settings</h2>
+          <div className="setting-row">
+            <div className="setting-info">
+              <span className="setting-label">Match Results Folder:</span>
+              <span className="setting-value">{gameState.settings.matchResultFolder || 'Default (Documents/DroneSoccerScoreboard/MatchResults)'}</span>
+            </div>
+            <button
+              className="btn btn-primary"
+              onClick={async () => {
+                const folderPath = await window.electronAPI.selectFolder();
+                if (folderPath) {
+                  sendCommand('set-match-result-folder', { path: folderPath });
+                }
+              }}
+            >
+              Choose Folder
+            </button>
+          </div>
+        </section>
       </main>
 
       <footer className="ref-footer">

@@ -27,7 +27,9 @@ class GameState {
         defender: null,         // 'home' or 'away'
         totalSeconds: 0,
         remainingSeconds: 0,
-        penaltyDifference: 0
+        penaltyDifference: 0,
+        homeScore: 0,
+        awayScore: 0
       },
       match: {
         period: 1,
@@ -35,7 +37,8 @@ class GameState {
         isMatchComplete: false  // All sets completed
       },
       settings: {
-        soundEnabled: true
+        soundEnabled: true,
+        matchResultFolder: null
       },
       sponsors: [],  // Array of { id, name, logoPath, order }
       sponsorLabel: 'Event Sponsors'  // Customizable label for sponsor section
@@ -50,12 +53,18 @@ class GameState {
   incrementScore(team) {
     if (this.state.teams[team]) {
       this.state.teams[team].score += 1;
+      if (this.state.penaltyPhase.isActive && typeof this.state.penaltyPhase[`${team}Score`] !== 'undefined') {
+        this.state.penaltyPhase[`${team}Score`] += 1;
+      }
     }
   }
 
   decrementScore(team) {
     if (this.state.teams[team] && this.state.teams[team].score > 0) {
       this.state.teams[team].score -= 1;
+      if (this.state.penaltyPhase.isActive && typeof this.state.penaltyPhase[`${team}Score`] !== 'undefined') {
+        this.state.penaltyPhase[`${team}Score`] = Math.max(0, this.state.penaltyPhase[`${team}Score`] - 1);
+      }
     }
   }
 
@@ -186,7 +195,9 @@ class GameState {
           defender: defender,
           totalSeconds: penaltyTime,
           remainingSeconds: penaltyTime,
-          penaltyDifference: penaltyDiff
+          penaltyDifference: penaltyDiff,
+          homeScore: 0,
+          awayScore: 0
         };
 
         this.state.match.isEnded = false; // Not ended yet, penalty phase first
@@ -246,7 +257,6 @@ class GameState {
 
   finalizeSet() {
     this.state.match.isEnded = true;
-    this.state.penaltyPhase.isActive = false;
 
     // Determine set winner based on score
     let winner = 'tie';
@@ -263,8 +273,15 @@ class GameState {
       setNumber: this.state.sets.current,
       homeScore: this.state.teams.home.score,
       awayScore: this.state.teams.away.score,
-      winner: winner
+      winner: winner,
+      penaltyPoints: {
+        home: this.state.penaltyPhase.isActive ? this.state.penaltyPhase.homeScore : 0,
+        away: this.state.penaltyPhase.isActive ? this.state.penaltyPhase.awayScore : 0
+      },
+      endTime: new Date().toISOString()
     });
+
+    this.state.penaltyPhase.isActive = false;
 
     // Check if match is complete
     const setsToWin = Math.ceil(this.state.sets.total / 2);
@@ -272,6 +289,14 @@ class GameState {
       this.state.teams.away.setsWon >= setsToWin ||
       this.state.sets.current >= this.state.sets.total) {
       this.state.match.isMatchComplete = true;
+    }
+
+    if (this.callbacks.onSetEnd) {
+      this.callbacks.onSetEnd(this.getState());
+    }
+
+    if (this.state.match.isMatchComplete && this.callbacks.onMatchEnd) {
+      this.callbacks.onMatchEnd(this.getState());
     }
 
     if (this.callbacks.onTimerEnd) {
@@ -303,7 +328,9 @@ class GameState {
         setNumber: oldSet.setNumber,
         homeScore: homeScore,
         awayScore: awayScore,
-        winner: winner
+        winner: winner,
+        penaltyPoints: oldSet.penaltyPoints,
+        endTime: oldSet.endTime
       };
 
       // Recalculate match complete status
@@ -352,6 +379,11 @@ class GameState {
   endMatch() {
     this.pauseTimer();
     this.state.match.isEnded = true;
+    this.state.match.isMatchComplete = true;
+
+    if (this.callbacks.onMatchEnd) {
+      this.callbacks.onMatchEnd(this.getState());
+    }
 
     if (this.callbacks.onTimerEnd) {
       this.callbacks.onTimerEnd();
@@ -361,6 +393,10 @@ class GameState {
   // Settings
   toggleSound() {
     this.state.settings.soundEnabled = !this.state.settings.soundEnabled;
+  }
+
+  setMatchResultFolder(folderPath) {
+    this.state.settings.matchResultFolder = folderPath;
   }
 
   // Sponsor management
@@ -436,7 +472,9 @@ class GameState {
         defender: null,
         totalSeconds: 0,
         remainingSeconds: 0,
-        penaltyDifference: 0
+        penaltyDifference: 0,
+        homeScore: 0,
+        awayScore: 0
       },
       match: {
         period: 1,
