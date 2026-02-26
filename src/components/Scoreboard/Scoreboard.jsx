@@ -26,7 +26,7 @@ function Scoreboard() {
 
       <header className="scoreboard-header">
         {gameState.sponsors && gameState.sponsors.length > 0 ? (
-          <SponsorDisplay sponsors={gameState.sponsors} label={gameState.sponsorLabel} />
+          <SponsorDisplay sponsors={gameState.sponsors} label={gameState.sponsorLabel} isBreak={gameState.sets?.isWaitingPeriod} />
         ) : (
           <h1 className="title">DRONE SOCCER</h1>
         )}

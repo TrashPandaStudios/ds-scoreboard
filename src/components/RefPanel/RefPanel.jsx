@@ -21,14 +21,20 @@ function RefPanel() {
       }
 
       switch (e.key.toLowerCase()) {
-        // Team 1 (Home) - W/S keys
+        // Team 1 (Home) - W/S for Score, A/D for Penalties
         case 'w':
           sendCommand('increment-score', { team: 'home' });
           break;
         case 's':
           sendCommand('decrement-score', { team: 'home' });
           break;
-        // Team 2 (Away) - Arrow keys
+        case 'a':
+          sendCommand('decrement-penalty', { team: 'home' });
+          break;
+        case 'd':
+          sendCommand('increment-penalty', { team: 'home' });
+          break;
+        // Team 2 (Away) - Up/Down for Score, Left/Right for Penalties
         case 'arrowup':
           e.preventDefault();
           sendCommand('increment-score', { team: 'away' });
@@ -36,6 +42,14 @@ function RefPanel() {
         case 'arrowdown':
           e.preventDefault();
           sendCommand('decrement-score', { team: 'away' });
+          break;
+        case 'arrowleft':
+          e.preventDefault();
+          sendCommand('decrement-penalty', { team: 'away' });
+          break;
+        case 'arrowright':
+          e.preventDefault();
+          sendCommand('increment-penalty', { team: 'away' });
           break;
         default:
           break;
@@ -204,6 +218,7 @@ function RefPanel() {
         </div>
         <div className="keyboard-hints">
           <span className="hint">Score: <kbd>W</kbd>/<kbd>S</kbd> Team 1 · <kbd>↑</kbd>/<kbd>↓</kbd> Team 2</span>
+          <span className="hint" style={{ marginLeft: '1rem' }}>Penalties: <kbd>A</kbd>/<kbd>D</kbd> Team 1 · <kbd>←</kbd>/<kbd>→</kbd> Team 2</span>
         </div>
       </footer>
     </div>

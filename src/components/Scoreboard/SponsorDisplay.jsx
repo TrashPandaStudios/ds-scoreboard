@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function SponsorDisplay({ sponsors, label }) {
+function SponsorDisplay({ sponsors, label, isBreak }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
@@ -33,8 +33,8 @@ function SponsorDisplay({ sponsors, label }) {
   const currentSponsor = sponsors[validIndex];
 
   return (
-    <div 
-      className="sponsor-display"
+    <div
+      className={`sponsor-display ${isBreak ? 'is-break' : ''}`}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -48,8 +48,8 @@ function SponsorDisplay({ sponsors, label }) {
             className={`sponsor-item ${index === validIndex ? 'active' : ''}`}
           >
             {sponsor.logoUrl && (
-              <img 
-                src={sponsor.logoUrl} 
+              <img
+                src={sponsor.logoUrl}
                 alt={sponsor.name}
                 className={`sponsor-logo ${sponsor.whiteBackground ? 'white-bg' : ''}`}
               />
@@ -60,7 +60,7 @@ function SponsorDisplay({ sponsors, label }) {
           </div>
         ))}
       </div>
-      
+
       {sponsors.length > 1 && (
         <div className="sponsor-indicators">
           {sponsors.map((sponsor, index) => (
